@@ -6,7 +6,9 @@ export default createStore({
     messages: [],
     connected: false,
     userName: '',
-    messageText: ''
+    messageText: '',
+    showBackground: false,
+    loginIsEmpty: true,
   },
   getters: {
   },
@@ -25,13 +27,35 @@ export default createStore({
     },
 
     clearMessage(state) {
-      state.userName = state.messageText = ''
+      state.messageText = ''
+    },
+
+    clearUserName(state) {
+      state.userName = ''
+    },
+
+    hideLoginBtn(state) {
+      state.loginIsEmpty = true
+    },
+
+    lazyBackground(state) {
+      setTimeout(() => {
+        state.showBackground = true
+      }, 300);
+    },
+
+    loginValidation(state) {
+      if (state.userName !== '') {
+        state.loginIsEmpty = false
+      } else {
+        state.loginIsEmpty = true
+      }
     }
   },
   actions: {
     startSocket({ state, commit }) {
       commit('startConnection')
-      console.log(state.connection);
+      console.log('socket connected');
       state.connection.onopen = () => {
         commit('logIn')
         const message = {
@@ -40,6 +64,7 @@ export default createStore({
           id: Date.now()
         }
         state.connection.send(JSON.stringify(message))
+        commit('hideLoginBtn')
       }
 
       state.connection.onmessage = (event) => {
