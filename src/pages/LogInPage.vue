@@ -21,7 +21,6 @@
 
 
 export default {
-
     mounted() {
         this.$store.commit('lazyBackground')
     }

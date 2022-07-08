@@ -12,22 +12,14 @@ export default createStore({
     loginIsEmpty: true,
   },
   getters: {
-    getUsersOnline(state) {
-      let getOnline = []
-      getOnline = JSON.parse(localStorage.getItem('users'))
-      if (getOnline !== null) {
-        return state.usersOnline = getOnline
-      }
-    }
   },
   mutations: {
-
     startConnection(state) {
       state.connection = new WebSocket('ws://localhost:5000')
     },
 
-    stopConnection(state) {
-      localStorage.clear()
+    setOnline(state) {
+      state.usersOnline = state.messages.filter(user => user.event === 'connection')
     },
 
     logIn(state) {
@@ -64,22 +56,6 @@ export default createStore({
       }
     },
 
-    getUsersOnline(state, message) {
-      if (message !== null) {
-        const user = JSON.parse(localStorage.getItem('users'))
-        let users = []
-        users.push(message)
-        if (user !== null) {
-          users = [...users, ...user]
-        }
-        localStorage.setItem('users', JSON.stringify(users))
-        users = JSON.parse(localStorage.getItem('users'))
-        if (users !== null) {
-          state.usersOnline = users
-        }
-      }
-    }
-
   },
   actions: {
     startSocket({ state, commit }) {
@@ -98,17 +74,20 @@ export default createStore({
 
       state.connection.onmessage = (event) => {
         const message = JSON.parse(event.data)
-        console.log(message);
-        commit('getUsersOnline', message.event === 'connection' ? message : null)
         state.messages.unshift(message)
+        console.log(message);
+        commit('setOnline')
+        if (message.event === 'close') {
+          state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
+        }
       }
 
-      state.connection.onclose = (event) => {
-        console.log(event.data);
+      state.connection.onclose = () => {
+        console.log('socket closed');
       }
 
       state.connection.onerror = () => {
-        console.log('socket has error');
+        console.log('something wrong');
       }
     },
 
@@ -130,7 +109,6 @@ export default createStore({
         event: 'close'
       }
       state.connection.send(JSON.stringify(message))
-      console.log(state.usersOnline.shift(message.userName));
     }
   },
 })

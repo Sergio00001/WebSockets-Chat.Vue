@@ -1,15 +1,11 @@
 <template>
-    <!-- <div class="sendMessage">
-        <div class="form">
-            <input v-model="$store.state.messageText" placeholder="Введите ваше сообщение" type="text" class="message">
-            <button class="btn" type="submit" @click="$store.dispatch('sendMessage')">Отправить</button>
-        </div>
-    </div> -->
     <div class="chat__panel">
         <div class="all__users">
             <div class="users__panel">
-                <a href="#" class="leave__chat" @click.prevent="$store.dispatch('closeConnection')">Покинуть Чат</a>
-                <div class="online__user" v-for="user in $store.getters.getUsersOnline" :key="user.id">
+                <a href="http://localhost:8080/" class="leave__chat"
+                    @click="$store.dispatch('closeConnection')">Покинуть
+                    Чат</a>
+                <div class="online__user" v-for="user in $store.state.usersOnline" :key="user.id">
                     <div class="online__indicator"></div>
                     <h4 class="online__name">{{ user.userName }}</h4>
                 </div>
@@ -64,7 +60,7 @@ export default {
 
 .leave__chat {
     display: flex;
-    justify-content: end;
+    justify-content: right;
     padding: 10px;
     color: white;
     transition: all 0.3s ease 0s;
@@ -75,7 +71,7 @@ export default {
 
 .online__user {
     display: flex;
-    justify-content: start;
+    justify-content: left;
     align-items: center;
     margin-right: 8px;
     padding: 15px;

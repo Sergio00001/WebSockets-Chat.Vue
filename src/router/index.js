@@ -14,12 +14,6 @@ const routes = [
     name: 'chat',
     component: () => import('@/pages/ChatPage')
   },
-
-  {
-    path: '/store',
-    name: 'store',
-    component: () => import('@/pages/HomePageStore')
-  }
 ]
 
 const router = createRouter({
