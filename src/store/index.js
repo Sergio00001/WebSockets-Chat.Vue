@@ -7,6 +7,7 @@ export default createStore({
     usersOnline: [],
     connected: false,
     userName: '',
+    chatName: '',
     messageText: '',
     showBackground: false,
     loginIsEmpty: true,
@@ -49,7 +50,7 @@ export default createStore({
     },
 
     loginValidation(state) {
-      if (state.userName !== '') {
+      if (state.userName !== '' && state.chatName !== '') {
         state.loginIsEmpty = false
       } else {
         state.loginIsEmpty = true
@@ -66,6 +67,7 @@ export default createStore({
         const message = {
           event: 'connection',
           userName: state.userName,
+          chatName: state.chatName,
           id: Date.now()
         }
         state.connection.send(JSON.stringify(message))
@@ -74,11 +76,20 @@ export default createStore({
 
       state.connection.onmessage = (event) => {
         const message = JSON.parse(event.data)
-        state.messages.unshift(message)
-        console.log(message);
-        commit('setOnline')
-        if (message.event === 'close') {
-          state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
+        if (Array.isArray(message)) {
+          console.log(message);
+          state.usersOnline = message.filter(user => user.event === 'connection')
+          message.forEach(user => {
+            if (user.event === 'close') {
+              state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
+            }
+          })
+        } else {
+          state.messages.unshift(message)
+          // commit('setOnline')
+          if (message.event === 'close') {
+            state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
+          }
         }
       }
 
@@ -94,6 +105,7 @@ export default createStore({
     sendMessage({ state, commit }) {
       const message = {
         userName: state.userName,
+        chatName: state.chatName,
         message: state.messageText,
         id: Date.now(),
         event: 'message',
@@ -105,6 +117,7 @@ export default createStore({
     closeConnection({ state }) {
       const message = {
         userName: state.userName,
+        chatName: state.chatName,
         id: Date.now(),
         event: 'close'
       }
