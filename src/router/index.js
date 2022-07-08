@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LogInPage from '@/pages/LogInPage'
-import ChatPage from '@/pages/ChatPage'
 
 
 const routes = [
@@ -13,7 +12,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chat',
-    component: ChatPage
+    component: () => import('@/pages/ChatPage')
   },
 
   {

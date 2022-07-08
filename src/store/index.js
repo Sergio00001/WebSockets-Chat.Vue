@@ -4,6 +4,7 @@ export default createStore({
   state: {
     connection: null,
     messages: [],
+    usersOnline: [],
     connected: false,
     userName: '',
     messageText: '',
@@ -11,11 +12,22 @@ export default createStore({
     loginIsEmpty: true,
   },
   getters: {
+    getUsersOnline(state) {
+      let getOnline = []
+      getOnline = JSON.parse(localStorage.getItem('users'))
+      if (getOnline !== null) {
+        return state.usersOnline = getOnline
+      }
+    }
   },
   mutations: {
 
     startConnection(state) {
       state.connection = new WebSocket('ws://localhost:5000')
+    },
+
+    stopConnection(state) {
+      localStorage.clear()
     },
 
     logIn(state) {
@@ -50,7 +62,24 @@ export default createStore({
       } else {
         state.loginIsEmpty = true
       }
+    },
+
+    getUsersOnline(state, message) {
+      if (message !== null) {
+        const user = JSON.parse(localStorage.getItem('users'))
+        let users = []
+        users.push(message)
+        if (user !== null) {
+          users = [...users, ...user]
+        }
+        localStorage.setItem('users', JSON.stringify(users))
+        users = JSON.parse(localStorage.getItem('users'))
+        if (users !== null) {
+          state.usersOnline = users
+        }
+      }
     }
+
   },
   actions: {
     startSocket({ state, commit }) {
@@ -69,11 +98,13 @@ export default createStore({
 
       state.connection.onmessage = (event) => {
         const message = JSON.parse(event.data)
-        state.messages.push(message)
+        console.log(message);
+        commit('getUsersOnline', message.event === 'connection' ? message : null)
+        state.messages.unshift(message)
       }
 
-      state.connection.onclose = () => {
-        console.log('socket is closed');
+      state.connection.onclose = (event) => {
+        console.log(event.data);
       }
 
       state.connection.onerror = () => {
@@ -90,6 +121,16 @@ export default createStore({
       }
       state.connection.send(JSON.stringify(message))
       commit('clearMessage')
+    },
+
+    closeConnection({ state }) {
+      const message = {
+        userName: state.userName,
+        id: Date.now(),
+        event: 'close'
+      }
+      state.connection.send(JSON.stringify(message))
+      console.log(state.usersOnline.shift(message.userName));
     }
   },
 })
