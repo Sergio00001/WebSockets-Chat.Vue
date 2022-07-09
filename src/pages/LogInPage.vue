@@ -1,7 +1,6 @@
 <template>
     <div class="login">
         <div class="login__background" :class="{ 'active': $store.state.showBackground }">
-            <img src="@/assets/log-in_background.jpg" alt="background" class="background__img">
         </div>
         <div class="login__wrapper" :class="{ 'active': $store.state.showBackground }">
             <div class="login__form">
@@ -36,16 +35,18 @@ export default {
 .login__background {
     opacity: 0;
     transition: all 1s;
+    background-image: url('@/assets/log-in_background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    height: 100vh;
 
     &.active {
         opacity: 1;
     }
 }
 
-.background__img {
-    width: 100%;
-    height: auto;
-}
 
 .login__wrapper {
     position: absolute;
@@ -92,7 +93,6 @@ export default {
     transition: all 0.5s ease 0s;
 
     &::placeholder {
-        position: absolute;
         transition: all 0.5s ease 0s;
         transform: translate(0px, 0px);
         padding-top: 5px;
@@ -181,7 +181,8 @@ export default {
     .login__name {
         font-size: 10px;
         margin-bottom: 10px;
-        padding-left: 0px;
+        padding-left: 2px;
+        outline: invert;
 
         &::placeholder {
             padding-top: 10px;

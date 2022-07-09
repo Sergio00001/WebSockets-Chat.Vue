@@ -2,7 +2,7 @@
     <div class="chat__panel">
         <div class="all__users">
             <div class="users__panel">
-                <a href="http://localhost:8080/" class="leave__chat"
+                <a href="https://sergio00001.github.io/WebSockets-Chat.Vue/" class="leave__chat"
                     @click="$store.dispatch('closeConnection')">Покинуть
                     Чат</a>
                 <div class="online__user" v-for="user in $store.state.usersOnline" :key="user.id">
@@ -176,10 +176,8 @@ export default {
     height: 43px;
 
     &::placeholder {
-        position: absolute;
         transition: all 0.5s ease 0s;
         transform: translate(0px, 0px);
-        padding-top: 12px;
         opacity: 1;
         color: white;
     }
