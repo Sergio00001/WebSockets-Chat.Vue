@@ -15,10 +15,10 @@
             <div class="chat__window">
                 <div class="window__message" v-for="mes in $store.state.messages" :key="mes.id">
                     <div class="message__wrapper" v-if="mes.event === 'connection'">
-                        <p class="user__name">В чат зашел: <strong>{{ mes.userName }}</strong></p>
+                        <p class="user__message">В чат зашел: <strong>{{ mes.userName }}</strong></p>
                     </div>
                     <div class="message__wrapper" v-else-if="mes.event === 'close'">
-                        <p class="user__name">Чат покинул: <strong>{{ mes.userName }}</strong></p>
+                        <p class="user__message">Чат покинул: <strong>{{ mes.userName }}</strong></p>
                     </div>
                     <div class="message__wrapper" v-else>
                         <h4 class="user__name">{{ mes.userName }}</h4>
@@ -54,7 +54,6 @@ export default {
     width: 25%;
     height: 100vh;
     background-color: rgb(28 29 33);
-    position: relative;
     border-right: 1px solid black;
 }
 
@@ -101,23 +100,21 @@ export default {
 // chat panel
 
 .chat__area {
-    position: relative;
     width: 75%;
     height: 100vh;
 }
 
 // chat window
 .chat__window {
-    position: absolute;
     background-image: url('@/assets/chat_background.jpg');
     background-repeat: no-repeat;
-    background-position: fixed;
     background-size: cover;
     width: 100%;
     height: 93%;
     display: flex;
     flex-direction: column-reverse;
     overflow: scroll;
+    overflow-x: hidden;
 }
 
 .window__message {
@@ -130,7 +127,6 @@ export default {
 
 .message__wrapper {
     border: 1px solid white;
-    display: inline-block;
     padding: 10px 15px;
     border-radius: 17px;
     background-color: white;
@@ -148,7 +144,6 @@ export default {
 // sendMessage Form
 
 .send__message {
-    position: absolute;
     background-color: rgb(28 29 33);
     width: 100%;
     height: 7%;
@@ -196,7 +191,6 @@ export default {
 }
 
 .send__btn {
-    font-size: 16px;
     cursor: pointer;
     padding: 5px;
     color: white;
@@ -216,5 +210,47 @@ export default {
 .send__img {
     width: 100%;
     height: auto;
+}
+
+@media(max-width: 768px) {
+    .message__input {
+        width: 55vw;
+    }
+}
+
+@media(max-width: 515px) {
+    .leave__chat {
+        text-align: center;
+        justify-content: center;
+        font-size: 10px;
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+
+    .online__name {
+        font-size: 9px;
+    }
+
+    .online__indicator {
+        margin-right: 6px;
+        height: 5px;
+        width: 5px;
+    }
+
+    .user__message {
+        font-size: 15px;
+    }
+
+    .online__user {
+        justify-content: center;
+        padding: 10px 0px;
+    }
+}
+
+@media(max-width: 370px) {
+    .message__input {
+        width: 50vw;
+    }
+
 }
 </style>

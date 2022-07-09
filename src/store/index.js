@@ -23,14 +23,6 @@ export default createStore({
       state.usersOnline = state.messages.filter(user => user.event === 'connection')
     },
 
-    logIn(state) {
-      state.connected = true
-    },
-
-    logOut(state) {
-      state.connected = false
-    },
-
     clearMessage(state) {
       state.messageText = ''
     },
@@ -50,10 +42,13 @@ export default createStore({
     },
 
     loginValidation(state) {
-      if (state.userName !== '' && state.chatName !== '') {
+      if (state.userName && state.chatName && state.userName.length <= 10) {
         state.loginIsEmpty = false
       } else {
         state.loginIsEmpty = true
+        if (state.userName.length > 10) {
+          state.userName = `long name!`
+        }
       }
     },
 
@@ -63,7 +58,6 @@ export default createStore({
       commit('startConnection')
       console.log('socket connected');
       state.connection.onopen = () => {
-        commit('logIn')
         const message = {
           event: 'connection',
           userName: state.userName,
@@ -77,13 +71,7 @@ export default createStore({
       state.connection.onmessage = (event) => {
         const message = JSON.parse(event.data)
         if (Array.isArray(message)) {
-          console.log(message);
           state.usersOnline = message.filter(user => user.event === 'connection')
-          message.forEach(user => {
-            if (user.event === 'close') {
-              state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
-            }
-          })
         } else {
           state.messages.unshift(message)
           // commit('setOnline')
@@ -110,11 +98,13 @@ export default createStore({
         id: Date.now(),
         event: 'message',
       }
-      state.connection.send(JSON.stringify(message))
+      if (state.messageText) {
+        state.connection.send(JSON.stringify(message))
+      }
       commit('clearMessage')
     },
 
-    closeConnection({ state }) {
+    closeConnection({ state, commit }) {
       const message = {
         userName: state.userName,
         chatName: state.chatName,

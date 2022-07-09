@@ -181,6 +181,7 @@ export default {
     .login__name {
         font-size: 10px;
         margin-bottom: 10px;
+        padding-left: 0px;
 
         &::placeholder {
             padding-top: 10px;
