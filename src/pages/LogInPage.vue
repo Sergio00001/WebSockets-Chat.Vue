@@ -84,7 +84,6 @@ export default {
     height: 30px;
     margin-bottom: 25px;
     color: black;
-    outline: none;
     padding-left: 10px;
     border-left: 0px;
     border-right: 0px;
@@ -95,7 +94,6 @@ export default {
     &::placeholder {
         transition: all 0.5s ease 0s;
         transform: translate(0px, 0px);
-        padding-top: 5px;
         opacity: 1;
         color: black;
     }
@@ -179,14 +177,9 @@ export default {
     }
 
     .login__name {
-        font-size: 10px;
+        font-size: 9px;
         margin-bottom: 10px;
         padding-left: 2px;
-        outline: invert;
-
-        &::placeholder {
-            padding-top: 10px;
-        }
     }
 
     .login__btn {

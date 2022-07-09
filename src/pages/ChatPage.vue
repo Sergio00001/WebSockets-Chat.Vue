@@ -210,6 +210,35 @@ export default {
     height: auto;
 }
 
+@media(min-width: 1700px) {
+    .leave__chat {
+        font-size: 40px;
+    }
+
+    .online__name {
+        font-size: 50px;
+    }
+
+    .online__indicator {
+        margin-right: 20px;
+        height: 25px;
+        width: 25px;
+    }
+
+    .message__wrapper {
+        border-radius: 25px;
+        padding: 15px 25px;
+    }
+
+    .user__message {
+        font-size: 50px;
+    }
+
+    .message__input {
+        font-size: 40px;
+    }
+}
+
 @media(max-width: 768px) {
     .message__input {
         width: 55vw;
