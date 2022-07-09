@@ -85,10 +85,8 @@ export default {
     margin-bottom: 25px;
     color: black;
     padding-left: 10px;
-    border-left: 0px;
-    border-right: 0px;
-    border-top: 0px;
-    border-bottom: 1px solid black;
+    border: 1px solid black;
+    border-radius: 4px;
     transition: all 0.5s ease 0s;
 
     &::placeholder {
@@ -109,10 +107,11 @@ export default {
     background-color: rgba(255, 255, 255, 0);
     border: 1px solid black;
     transition: all 0.4s ease 0s;
-    border-radius: 8px;
+    border-radius: 14px;
     cursor: pointer;
     opacity: 0;
     transform: translateY(10px);
+    color: black;
 
     &:hover {
         background-color: black;
