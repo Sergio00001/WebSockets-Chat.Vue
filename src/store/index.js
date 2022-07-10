@@ -16,7 +16,7 @@ export default createStore({
   },
   mutations: {
     startConnection(state) {
-      state.connection = new WebSocket('ws://localhost:3000')
+      state.connection = new WebSocket('ws://localhost:5000')
     },
 
     setOnline(state) {
