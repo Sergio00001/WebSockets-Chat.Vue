@@ -16,7 +16,7 @@ export default createStore({
   },
   mutations: {
     startConnection(state) {
-      state.connection = new WebSocket('ws://localhost:5000')
+      state.connection = new WebSocket('ws://safe-badlands-07872.herokuapp.com/')
     },
 
     setOnline(state) {
