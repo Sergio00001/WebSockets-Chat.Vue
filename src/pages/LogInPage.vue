@@ -88,6 +88,7 @@ export default {
     border: 1px solid black;
     border-radius: 4px;
     transition: all 0.5s ease 0s;
+    outline-color: black;
 
     &::placeholder {
         transition: all 0.5s ease 0s;
@@ -110,6 +111,7 @@ export default {
     border-radius: 14px;
     cursor: pointer;
     opacity: 0;
+    visibility: hidden;
     transform: translateY(10px);
     color: black;
 
@@ -121,6 +123,7 @@ export default {
 
     &.active {
         opacity: 1;
+        visibility: visible;
         transform: translateY(0px);
     }
 }
