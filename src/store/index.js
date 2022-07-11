@@ -12,11 +12,12 @@ export default createStore({
     showBackground: false,
     loginIsEmpty: true,
   },
-  getters: {
-  },
+
+  getters: {},
+
   mutations: {
     startConnection(state) {
-      state.connection = new WebSocket('ws://safe-badlands-07872.herokuapp.com/')
+      state.connection = new WebSocket('wss://peaceful-savannah-77354.herokuapp.com/')
     },
 
     setOnline(state) {
@@ -51,8 +52,9 @@ export default createStore({
         }
       }
     },
-
   },
+
+  // Working with socket requests
   actions: {
     startSocket({ state, commit }) {
       commit('startConnection')
@@ -74,7 +76,6 @@ export default createStore({
           state.usersOnline = message.filter(user => user.event === 'connection')
         } else {
           state.messages.unshift(message)
-          // commit('setOnline')
           if (message.event === 'close') {
             state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
           }
@@ -104,7 +105,7 @@ export default createStore({
       commit('clearMessage')
     },
 
-    closeConnection({ state, commit }) {
+    closeConnection({ state }) {
       const message = {
         userName: state.userName,
         chatName: state.chatName,
