@@ -5,7 +5,6 @@ export default createStore({
     connection: null,
     messages: [],
     usersOnline: [],
-    connected: false,
     userName: '',
     chatName: '',
     messageText: '',
@@ -17,7 +16,7 @@ export default createStore({
 
   mutations: {
     startConnection(state) {
-      state.connection = new WebSocket('wss://peaceful-savannah-77354.herokuapp.com/')
+      state.connection = new WebSocket('ws://localhost:5000')
     },
 
     setOnline(state) {

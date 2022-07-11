@@ -3,8 +3,7 @@
         <div class="all__users">
             <div class="users__panel">
                 <a href="https://sergio00001.github.io/WebSockets-Chat.Vue/" class="leave__chat"
-                    @click="$store.dispatch('closeConnection')">Покинуть
-                    Чат</a>
+                    @click="$store.dispatch('closeConnection')">Покинуть Чат</a>
                 <div class="online__user" v-for="user in $store.state.usersOnline" :key="user.id">
                     <div class="online__indicator"></div>
                     <h4 class="online__name">{{ user.userName }}</h4>
