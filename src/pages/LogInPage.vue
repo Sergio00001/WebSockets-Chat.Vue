@@ -1,19 +1,42 @@
 <template>
     <div class="login">
-        <div class="login__background" :class="{ 'active': $store.state.showBackground }">
+        <div
+            class="login__background"
+            :class="{ 'active': $store.state.showBackground }"
+        >
         </div>
-        <div class="login__wrapper" :class="{ 'active': $store.state.showBackground }">
+        <div
+            class="login__wrapper"
+            :class="{ 'active': $store.state.showBackground }"
+        >
             <div class="login__form">
                 <h1 class="login__header">Secret Chat</h1>
                 <div class="login__logo">
-                    <img src="@/assets/private-chat.png" alt="logo" class="login__img">
+                    <img
+                        src="@/assets/private-chat.png"
+                        alt="logo"
+                        class="login__img"
+                    >
                 </div>
-                <input v-model.trim="$store.state.userName" @keyup="$store.commit('loginValidation')"
-                    placeholder="Введите ваш ник" type="text" class="login__name">
-                <input v-model.trim="$store.state.chatName" @keyup="$store.commit('loginValidation')"
-                    placeholder="Введите название комнаты" type="text" class="login__name">
-                <button class="login__btn" :class="{ 'active': !$store.state.loginIsEmpty }"
-                    @click.prevent="$store.dispatch('startSocket'), $router.push('/chat')">Войти</button>
+                <input
+                    v-model.trim="$store.state.userName"
+                    @keyup="$store.commit('loginValidation')"
+                    placeholder="Введите ваш ник"
+                    type="text"
+                    class="login__name"
+                >
+                <input
+                    v-model.trim="$store.state.chatRoom"
+                    @keyup="$store.commit('loginValidation')"
+                    placeholder="Введите название комнаты"
+                    type="text"
+                    class="login__name"
+                >
+                <button
+                    class="login__btn"
+                    :class="{ 'active': !$store.state.loginIsEmpty }"
+                    @click.prevent="$store.dispatch('connect'), $router.push('/chat')"
+                >Войти</button>
             </div>
         </div>
     </div>

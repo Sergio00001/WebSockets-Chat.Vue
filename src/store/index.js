@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import socket from '@/socket/socket.js'
 
 export default createStore({
   state: {
@@ -6,7 +7,7 @@ export default createStore({
     messages: [],
     usersOnline: [],
     userName: '',
-    chatName: '',
+    chatRoom: '',
     messageText: '',
     showBackground: false,
     loginIsEmpty: true,
@@ -15,12 +16,18 @@ export default createStore({
   getters: {},
 
   mutations: {
-    startConnection(state) {
-      state.connection = new WebSocket('ws://localhost:5000')
+    setOnline(state, arr) {
+      state.usersOnline = arr
     },
 
-    setOnline(state) {
-      state.usersOnline = state.messages.filter(user => user.event === 'connection')
+    setLeave(state, arr) {
+      state.usersOnline = arr
+    },
+
+
+    setMessages(state, msg) {
+      state.messages.unshift(msg)
+      state.messages = [...new Set(state.messages)]
     },
 
     clearMessage(state) {
@@ -42,7 +49,7 @@ export default createStore({
     },
 
     loginValidation(state) {
-      if (state.userName && state.chatName && state.userName.length <= 10) {
+      if (state.userName && state.chatRoom && state.userName.length <= 10) {
         state.loginIsEmpty = false
       } else {
         state.loginIsEmpty = true
@@ -55,63 +62,55 @@ export default createStore({
 
   // Working with socket requests
   actions: {
-    startSocket({ state, commit }) {
-      commit('startConnection')
-      console.log('socket connected');
-      state.connection.onopen = () => {
-        const message = {
-          event: 'connection',
-          userName: state.userName,
-          chatName: state.chatName,
-          id: Date.now()
-        }
-        state.connection.send(JSON.stringify(message))
-        commit('hideLoginBtn')
+    connect({ state, dispatch }) {
+      const msg = {
+        id: Date.now(),
+        event: 'connection',
+        userName: state.userName,
+        room: state.chatRoom
       }
-
-      state.connection.onmessage = (event) => {
-        const message = JSON.parse(event.data)
-        if (Array.isArray(message)) {
-          state.usersOnline = message.filter(user => user.event === 'connection')
-        } else {
-          state.messages.unshift(message)
-          if (message.event === 'close') {
-            state.usersOnline = state.usersOnline.filter(user => user.userName !== message.userName)
-          }
-        }
-      }
-
-      state.connection.onclose = () => {
-        console.log('socket closed');
-      }
-
-      state.connection.onerror = () => {
-        console.log('something wrong');
-      }
+      dispatch('sendMessage', msg)
     },
 
-    sendMessage({ state, commit }) {
-      const message = {
+    leaveChat({ state, dispatch }) {
+      const msg = {
+        id: Date.now(),
+        event: 'close',
         userName: state.userName,
-        chatName: state.chatName,
-        message: state.messageText,
+        room: state.chatRoom
+      }
+      dispatch('sendMessage', msg)
+    },
+
+    createMessage({ state, dispatch }) {
+      const msg = {
         id: Date.now(),
         event: 'message',
+        userName: state.userName,
+        messageText: state.messageText,
+        room: state.chatRoom
       }
-      if (state.messageText) {
-        state.connection.send(JSON.stringify(message))
-      }
-      commit('clearMessage')
+      dispatch('sendMessage', msg)
     },
 
-    closeConnection({ state }) {
-      const message = {
-        userName: state.userName,
-        chatName: state.chatName,
-        id: Date.now(),
-        event: 'close'
-      }
-      state.connection.send(JSON.stringify(message))
-    }
+    sendMessage({ state }, msg) {
+      socket.emit('sendMessage', msg)
+      socket.on('allMsg', msg => {
+        state.messages.unshift(msg)
+      })
+      socket.on('join', arr => {
+        state.usersOnline = arr
+      })
+      socket.on('leave', arr => {
+        state.usersOnline = arr
+      })
+      socket.on('message', () => {
+        if (state.messageText) {
+          state.messages = [...new Set(state.messages)]
+          state.messageText = ''
+        }
+      })
+    },
   },
 })
+

@@ -2,9 +2,16 @@
     <div class="chat__panel">
         <div class="all__users">
             <div class="users__panel">
-                <a href="https://sergio00001.github.io/WebSockets-Chat.Vue/" class="leave__chat"
-                    @click="$store.dispatch('closeConnection')">Покинуть Чат</a>
-                <div class="online__user" v-for="user in $store.state.usersOnline" :key="user.id">
+                <a
+                    href="http://localhost:8080/"
+                    class="leave__chat"
+                    @click="$store.dispatch('leaveChat')"
+                >Покинуть Чат</a>
+                <div
+                    class="online__user"
+                    v-for="user in $store.state.usersOnline"
+                    :key="user.id"
+                >
                     <div class="online__indicator"></div>
                     <h4 class="online__name">{{ user.userName }}</h4>
                 </div>
@@ -12,25 +19,49 @@
         </div>
         <div class="chat__area">
             <div class="chat__window">
-                <div class="window__message" v-for="mes in $store.state.messages" :key="mes.id">
-                    <div class="message__wrapper" v-if="mes.event === 'connection'">
+                <div
+                    class="window__message"
+                    v-for="mes in $store.state.messages"
+                    :key="mes.id"
+                >
+                    <div
+                        class="message__wrapper"
+                        v-if="mes.event === 'connection'"
+                    >
                         <p class="user__message">В чат зашел: <strong>{{ mes.userName }}</strong></p>
                     </div>
-                    <div class="message__wrapper" v-else-if="mes.event === 'close'">
+                    <div
+                        class="message__wrapper"
+                        v-else-if="mes.event === 'close'"
+                    >
                         <p class="user__message">Чат покинул: <strong>{{ mes.userName }}</strong></p>
                     </div>
-                    <div class="message__wrapper" v-else>
+                    <div
+                        class="message__wrapper"
+                        v-else
+                    >
                         <h4 class="user__name">{{ mes.userName }}</h4>
-                        <p class="user__message">{{ mes.message }}</p>
+                        <p class="user__message">{{ mes.messageText }}</p>
                     </div>
                 </div>
             </div>
             <div class="send__message">
                 <form class="message__form">
-                    <input v-model="$store.state.messageText" placeholder="Сообщение..." type="text"
-                        class="message__input">
-                    <button class="send__btn" type="submit" @click.prevent="$store.dispatch('sendMessage')"><img
-                            src="@/assets/send_message.png" alt="send" class="send__img"></button>
+                    <input
+                        v-model="$store.state.messageText"
+                        placeholder="Сообщение..."
+                        type="text"
+                        class="message__input"
+                    >
+                    <button
+                        class="send__btn"
+                        type="submit"
+                        @click.prevent="$store.dispatch('createMessage')"
+                    ><img
+                            src="@/assets/send_message.png"
+                            alt="send"
+                            class="send__img"
+                        ></button>
                 </form>
             </div>
         </div>
