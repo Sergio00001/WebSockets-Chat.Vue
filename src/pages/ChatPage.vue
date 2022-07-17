@@ -3,7 +3,7 @@
         <div class="all__users">
             <div class="users__panel">
                 <a
-                    href="https://sergio00001.github.io/WebSockets-Chat.Vue/"
+                    href="https://sergio00001.github.io/WebSockets-Chat.Vue"
                     class="leave__chat"
                     @click="$store.dispatch('leaveChat')"
                 >Покинуть Чат</a>
